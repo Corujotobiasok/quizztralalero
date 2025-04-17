@@ -25,11 +25,13 @@ const personajes = [
 
 let currentCharacter = null;
 let score = 0;
-let timeLeft = 15;
+let timeLeft = 5;
 let timer;
 let correctAnswers = 0;
 
+// Cargar sonidos
 const perderSound = document.getElementById("fail-sound");
+const acertarSound = document.getElementById("success-sound");
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -41,13 +43,13 @@ function shuffleArray(array) {
 
 function cargarNuevoPersonaje() {
   clearInterval(timer);
-  timeLeft = 15;
+  timeLeft = 5;
   document.getElementById("time").textContent = `⏱️ ${timeLeft}s`;
 
   currentCharacter = personajes[getRandomInt(personajes.length)];
-  const img = document.getElementById("character-image");
-  img.src = currentCharacter.imagen;
-  img.alt = currentCharacter.nombre;
+  const imagen = document.getElementById("character-image");
+  imagen.src = currentCharacter.imagen;
+  imagen.alt = currentCharacter.nombre;
 
   const opciones = [currentCharacter.nombre];
   while (opciones.length < 4) {
@@ -72,7 +74,6 @@ function cargarNuevoPersonaje() {
 
 function verificarRespuesta(nombreSeleccionado) {
   const imagen = document.getElementById("character-image");
-
   if (nombreSeleccionado !== currentCharacter.nombre) {
     perderSound.play();
     imagen.classList.add("incorrecto");
@@ -82,6 +83,7 @@ function verificarRespuesta(nombreSeleccionado) {
       showResults();
     }, 400);
   } else {
+    acertarSound.play();
     score += 10;
     correctAnswers++;
     document.getElementById("score").textContent = score;
@@ -101,7 +103,7 @@ function startTimer() {
     if (timeLeft <= 0) {
       perderSound.play();
       clearInterval(timer);
-      setTimeout(showResults, 300);
+      showResults();
     }
   }, 1000);
 }
@@ -110,21 +112,16 @@ function showResults() {
   document.getElementById("game-screen").style.display = "none";
   const result = document.getElementById("result-screen");
   result.style.display = "flex";
-  document.getElementById("final-score").textContent =
-    `Respuestas correctas: ${correctAnswers} | Puntaje: ${score}`;
+  document.getElementById("final-stats").innerHTML = `
+    Respuestas correctas: ${correctAnswers}<br>
+    Puntaje final: ${score}
+  `;
 }
 
 function restartGame() {
   score = 0;
   correctAnswers = 0;
   document.getElementById("score").textContent = score;
-  document.getElementById("result-screen").style.display = "none";
-  document.getElementById("game-screen").style.display = "flex";
-  cargarNuevoPersonaje();
-}
-
-function volverAlInicio() {
-  clearInterval(timer);
   document.getElementById("result-screen").style.display = "none";
   document.getElementById("start-screen").style.display = "flex";
 }
