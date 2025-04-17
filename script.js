@@ -18,19 +18,18 @@ const personajes = [
   { nombre: "Bri Bri Bicus Dicus", imagen: "assets/bribri.png" },
   { nombre: "Trulimero Truchini", imagen: "assets/trulimero.png" },
   { nombre: "Burbaloni Luliloli", imagen: "assets/burbaloni.png" },
-  { nombre: "Crocodildo Penisini", imagen: "assets/crocodilo.png" },
+  { nombre: "Crocodildo Penisini", imagen: "assets/crocodildo.png" },
   { nombre: "Trippi Troppi", imagen: "assets/trippi.png" },
   { nombre: "Bombombom Tigerlini Watermelini", imagen: "assets/bombombom.png" },
 ];
 
 let currentCharacter = null;
 let score = 0;
-let timeLeft = 5;
+let timeLeft = 15;
 let timer;
 let correctAnswers = 0;
 
-// Cargar sonido
-const perderSound = new Audio('assets/perder.mp3');
+const perderSound = document.getElementById("fail-sound");
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -42,12 +41,13 @@ function shuffleArray(array) {
 
 function cargarNuevoPersonaje() {
   clearInterval(timer);
-  timeLeft = 5;
-  document.getElementById("time").textContent = `Tiempo restante: ${timeLeft}s`;
+  timeLeft = 15;
+  document.getElementById("time").textContent = `⏱️ ${timeLeft}s`;
 
   currentCharacter = personajes[getRandomInt(personajes.length)];
-  document.getElementById("character-image").src = currentCharacter.imagen;
-  document.getElementById("character-image").alt = currentCharacter.nombre;
+  const img = document.getElementById("character-image");
+  img.src = currentCharacter.imagen;
+  img.alt = currentCharacter.nombre;
 
   const opciones = [currentCharacter.nombre];
   while (opciones.length < 4) {
@@ -71,25 +71,35 @@ function cargarNuevoPersonaje() {
 }
 
 function verificarRespuesta(nombreSeleccionado) {
+  const imagen = document.getElementById("character-image");
+
   if (nombreSeleccionado !== currentCharacter.nombre) {
-    perderSound.play(); // Reproduce el sonido de perder
+    perderSound.play();
+    imagen.classList.add("incorrecto");
     clearInterval(timer);
-    setTimeout(showResults, 300);
+    setTimeout(() => {
+      imagen.classList.remove("incorrecto");
+      showResults();
+    }, 400);
   } else {
     score += 10;
     correctAnswers++;
     document.getElementById("score").textContent = score;
+    imagen.classList.add("correcto");
     clearInterval(timer);
-    setTimeout(cargarNuevoPersonaje, 300);
+    setTimeout(() => {
+      imagen.classList.remove("correcto");
+      cargarNuevoPersonaje();
+    }, 300);
   }
 }
 
 function startTimer() {
   timer = setInterval(() => {
     timeLeft--;
-    document.getElementById("time").textContent = `Tiempo restante: ${timeLeft}s`;
+    document.getElementById("time").textContent = `⏱️ ${timeLeft}s`;
     if (timeLeft <= 0) {
-      perderSound.play(); // También reproducir sonido si se acaba el tiempo
+      perderSound.play();
       clearInterval(timer);
       setTimeout(showResults, 300);
     }
@@ -100,10 +110,8 @@ function showResults() {
   document.getElementById("game-screen").style.display = "none";
   const result = document.getElementById("result-screen");
   result.style.display = "flex";
-  document.getElementById("final-stats").innerHTML = `
-    Respuestas correctas: ${correctAnswers}<br>
-    Puntaje final: ${score}
-  `;
+  document.getElementById("final-score").textContent =
+    `Respuestas correctas: ${correctAnswers} | Puntaje: ${score}`;
 }
 
 function restartGame() {
@@ -111,12 +119,13 @@ function restartGame() {
   correctAnswers = 0;
   document.getElementById("score").textContent = score;
   document.getElementById("result-screen").style.display = "none";
-  document.getElementById("start-screen").style.display = "flex";
+  document.getElementById("game-screen").style.display = "flex";
+  cargarNuevoPersonaje();
 }
 
 function volverAlInicio() {
   clearInterval(timer);
-  document.getElementById("game-screen").style.display = "none";
+  document.getElementById("result-screen").style.display = "none";
   document.getElementById("start-screen").style.display = "flex";
 }
 
@@ -128,5 +137,3 @@ function startGame() {
   document.getElementById("score").textContent = score;
   cargarNuevoPersonaje();
 }
-
-document.getElementById("start-button").addEventListener("click", startGame);

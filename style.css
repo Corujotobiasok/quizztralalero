@@ -68,7 +68,6 @@ img {
   background-color: white;
 }
 
-/* HUD debajo de la imagen */
 .hud {
   display: flex;
   justify-content: space-between;
@@ -110,9 +109,15 @@ img {
   font-weight: bold;
 }
 
-/* Animación cuando se pierde */
-.shake {
+/* Animaciones */
+.correcto {
+  background-color: #A8E6CF !important;
+  animation: pop 0.3s;
+}
+
+.incorrecto {
   animation: shake 0.4s;
+  background-color: #FF8B94 !important;
 }
 
 @keyframes shake {
@@ -123,16 +128,10 @@ img {
   100% { transform: translateX(0); }
 }
 
-#start-screen button {
-  background-color: #F25F5C;
-  color: #ffffff;
-  font-size: 18px;
-  border-radius: 16px;
-  padding: 12px 24px;
-}
-
-#start-screen button:hover {
-  background-color: #F2A65A;
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 @media (max-width: 500px) {

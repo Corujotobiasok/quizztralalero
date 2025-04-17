@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juego Brainrot Italiano</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quizz Tralalero</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- Pantalla de inicio -->
   <div class="screen" id="start-screen">
-    <h1>¡Bienvenid@ al juego Brainrot!</h1>
+    <h1>¡Bienvenid@ al juego Quizz Tralalero!</h1>
     <p>¿Quién es este personaje? Tienes que acertar el nombre del personaje en la imagen.</p>
     <button onclick="startGame()">Empezar</button>
   </div>
@@ -32,12 +32,13 @@
   <!-- Pantalla de resultados -->
   <div class="screen" id="result-screen" style="display: none;">
     <h2>¡Juego Terminado!</h2>
-    <p>Tu puntaje es: <span id="final-score"></span></p>
+    <p><span id="final-score"></span></p>
     <button onclick="restartGame()">Volver a jugar</button>
+    <button onclick="volverAlInicio()">Inicio</button>
   </div>
 
   <!-- Audio de pérdida -->
-  <audio id="fail-sound" src="./assets/fail.mp3"></audio>
+  <audio id="fail-sound" src="./assets/perder.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
